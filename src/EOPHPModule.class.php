@@ -103,6 +103,12 @@ class EOPHPModule {
         ]);
     }
 
+    final public function RequestOnlineNicknames() {
+        $this->bot->send_packet(Protocol::F['Players'], Protocol::A['List'], [
+            Protocol::COMMA
+        ]);
+    }
+
     final public function get_name() {
         return $this->module_name;
     }

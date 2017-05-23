@@ -108,8 +108,6 @@ class CoreModule extends EOPHPModule {
                 exit(1);
                 break;
             default:
-                $this->Output('Unknown response');
-                exit(1);
                 break;
         }
     }

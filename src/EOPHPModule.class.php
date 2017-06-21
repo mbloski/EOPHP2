@@ -55,7 +55,8 @@ class EOPHPModule {
         $this->bot->send_packet(Protocol::F['Login'], Protocol::A['Request'], [
             $username,
             Protocol::COMMA,
-            $password, Protocol::COMMA
+            $password,
+            Protocol::COMMA
         ]);
     }
 

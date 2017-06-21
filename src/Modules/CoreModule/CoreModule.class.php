@@ -96,8 +96,8 @@ class CoreModule extends EOPHPModule {
                 $this->bot->set_init($d_multi, $e_multi, $start_seq, $this->player_id);
                 $this->Output('Multi: [R:'.$d_multi.', S:'.$e_multi.'] Seq: ['.$start_seq.']');
                 $payload = array();
-                $payload[] = Protocol::EncodeInteger($d_multi, 2);
                 $payload[] = Protocol::EncodeInteger($e_multi, 2);
+                $payload[] = Protocol::EncodeInteger($d_multi, 2);
                 $payload[] = Protocol::EncodeInteger($this->player_id, 2);
                 $this->bot->send_packet(Protocol::F['Connection'], Protocol::A['Accept'], $payload);
                 $this->Login($this->username, $this->password);

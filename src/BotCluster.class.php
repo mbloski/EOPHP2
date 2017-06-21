@@ -29,13 +29,16 @@ class BotCluster {
     }
 
     public function Add($host, $port, $user, $pass, $char, $eoversion, $hdid) {
-        $this->bots[] = new Bot($host, $port, [
+        $bot = new Bot($host, $port, [
             'username' => $user,
             'password' => $pass,
             'character' => $char,
             'eo_version' => $eoversion,
             'hdid' => $hdid
         ]);
+
+        $this->bots[] = $bot;
+        return $bot;
     }
 
     public function Get($host) {

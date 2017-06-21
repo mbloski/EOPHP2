@@ -39,9 +39,9 @@ define('VERBOSE', false);
 
 $cluster = new BotCluster();
 //$cluster->AttachControlServer('0.0.0.0', 8888);
-$cluster->Add('localhost', 8078, 'user', 'password', 'character', 28, '12345678');
-$cluster->Get('user@localhost:8078')->LoadModule('EvalCommand', ['whitelist' => ['master'], 'command' => '#e']);
-$cluster->Get('user@localhost:8078')->LoadModule('UtilCommands', ['whitelist' => ['master']]);
+$default_bot = $cluster->Add('localhost', 8078, 'user', 'password', 'character', 28, '12345678');
+$default_bot->LoadModule('EvalCommand', ['whitelist' => ['master'], 'command' => '#e']);
+$default_bot->LoadModule('UtilCommands', ['whitelist' => ['master']]);
 
 while ($cluster->GetCount() > 0) {
     $cluster->Tick();

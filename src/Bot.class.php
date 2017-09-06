@@ -28,11 +28,14 @@ class Bot {
 
     private $modules;
 
+    private $cluster;
+
     function __construct($host, $port, $core_args) {
         $this->modules = array();
 
         $this->host = $host;
         $this->port = $port;
+        $this->cluster = $core_args['cluster'] ?? null;
         Output::Info('Spawning Bot instance ('.$host.':'.$port.')');
 
         try {
@@ -164,6 +167,10 @@ class Bot {
         }
 
         usleep(50000);
+    }
+
+    public function GetCluster() {
+        return $this->cluster;
     }
 
     public function Disconnect() {

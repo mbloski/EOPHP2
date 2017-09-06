@@ -51,7 +51,7 @@ class EOPHPModule {
         echo "[".date("H:i:s")."] [".$this->bot->get_host().'::'.$this->module_name."] $out\n";
     }
 
-    final public function Login($username, $password) {
+    public function Login($username, $password) {
         $this->bot->send_packet(Protocol::F['Login'], Protocol::A['Request'], [
             $username,
             Protocol::COMMA,
@@ -60,45 +60,45 @@ class EOPHPModule {
         ]);
     }
 
-    final public function SelectCharacter($id) {
+    public function SelectCharacter($id) {
         $this->bot->send_packet(Protocol::F['Welcome'], Protocol::A['Request'], [
             Protocol::EncodeInteger($id, 4)
         ]);
     }
 
-    final public function WorldLogin($player_id, $character_id) {
+    public function WorldLogin($player_id, $character_id) {
         $this->bot->send_packet(Protocol::F['Welcome'], Protocol::A['Message'], [
             Protocol::EncodeInteger($player_id, 3),
             Protocol::EncodeInteger($character_id, 4)
         ]);
     }
 
-    final public function Emote($emote) {
+    public function Emote($emote) {
         $this->bot->send_packet(Protocol::F['Emote'], Protocol::A['Report'], [
             Protocol::EncodeInteger($emote, 1)
         ]);
     }
 
-    final public function Say($message) {
+    public function Say($message) {
         $this->bot->send_packet(Protocol::F['Talk'], Protocol::A['Report'], [
             $message
         ]);
     }
 
-    final public function PrivateMessage($to, $message) {
+    public function PrivateMessage($to, $message) {
         $this->bot->send_packet(Protocol::F['Talk'], Protocol::A['Tell'], [
             $to,
             Protocol::COMMA,
             $message]);
     }
 
-    final public function Latency() {
+    public function Latency() {
         $this->bot->send_packet(Protocol::F['Message'], Protocol::A['Ping'], [
             Protocol::EncodeInteger(2, 2)
         ]);
     }
 
-    final public function Face($direction) {
+    public function Face($direction) {
         $this->bot->send_packet(Protocol::F['Face'], Protocol::A['Player'], [
             Protocol::EncodeInteger($direction, 1)
         ]);

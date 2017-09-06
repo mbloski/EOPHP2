@@ -34,7 +34,8 @@ class BotCluster {
             'password' => $pass,
             'character' => $char,
             'eo_version' => $eoversion,
-            'hdid' => $hdid
+            'hdid' => $hdid,
+            'cluster' => $this
         ]);
 
         $this->bots[] = $bot;

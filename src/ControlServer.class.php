@@ -64,6 +64,21 @@ class ControlServer {
         $this->Respond($client, 100, implode(' ', $bot->GetModuleList()));
     }
 
+    private function command_eval($client, $command) {
+        $doeval = function($cmd) use ($client) {
+            try {
+                eval($cmd);
+                $this->Respond($client, 100);
+                return 0;
+            } catch (\Error $e) {
+                $this->Respond($client, 200, ucfirst($e->getMessage()));
+                return -1;
+            }
+        };
+
+        return $doeval(substr($command, 5));
+    }
+
     private function command_loadmodule($client, $command) {
         $tok = explode(' ', $command);
 

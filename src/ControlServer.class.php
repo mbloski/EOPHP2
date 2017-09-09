@@ -36,6 +36,25 @@ class ControlServer {
         $this->botcluster = $botcluster;
 
         Output::Info('Serving Bot Control Protocol at '.$bindhost.':'.$bindport);
+        $this->server->on_accept(function($client) {
+            $this->Respond($client, 100, 'EOPHP2 Controller at your service');
+        });
+
+        $this->server->on_read(function($client) {
+            $command = trim($client->GetLine());
+            $tok = explode(' ', $command);
+
+            $callback = array($this, 'command_'.strtolower($tok[0]));
+            if (is_callable($callback)) {
+                $callback($client, $command);
+            } else {
+                $this->Respond($client, 300);
+            }
+        });
+
+        $this->server->on_close(function($client) {
+            $this->Respond($client, 100, 'Bye');
+        });
     }
 
     private function command_list($client, $command) {
@@ -167,7 +186,6 @@ class ControlServer {
     }
 
     private function command_quit($client, $command) {
-        $this->Respond($client, 100, 'Bye');
         $this->server->close($client);
     }
 
@@ -175,33 +193,10 @@ class ControlServer {
         $res = strval($code).' ';
         $res .= empty($message)? self::ResponseCodes[$code] : $message;
         $res .= "\r\n";
-        $this->server->send($client, $res);
-    }
-
-    private function route($client, $command) {
-        $command = trim($command);
-        $tok = explode(' ', $command);
-
-        $callback = array($this, 'command_'.strtolower($tok[0]));
-        if (is_callable($callback)) {
-            $callback($client, $command);
-        } else {
-            $this->Respond($client, 300);
-        }
+        $client->Write($res);
     }
 
     public function tick() {
-        $newclient = $this->server->accept();
-        if ($newclient !== null) {
-            $this->Respond($newclient, 100, 'EOPHP2 Controller at your service');
-        }
-
-        $clients = $this->server->select();
-
-        foreach ($clients as $client) {
-            $res = $this->server->recv($client);
-            if ($res === NULL) continue;
-            $this->route($client, $res);
-        }
+        $this->server->event_dispatch();
     }
 }

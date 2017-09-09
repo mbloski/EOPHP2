@@ -31,14 +31,14 @@ require_once('src/Protocol.class.php');
 require_once('src/EOStructures.php');
 require_once('src/EOPHPModule.class.php');
 require_once('src/Bot.class.php');
-require_once('src/SocketServer.class.php');
+require_once('src/SocketServer.php');
 require_once('src/ControlServer.class.php');
 require_once('src/BotCluster.class.php');
 
 define('VERBOSE', false);
 
 $cluster = new BotCluster();
-//$cluster->AttachControlServer('0.0.0.0', 8888);
+$cluster->AttachControlServer('127.0.0.1', 9098);
 $default_bot = $cluster->Add('localhost', 8078, 'user', 'password', 'character', 28, '12345678');
 $default_bot->LoadModule('EvalCommand', ['whitelist' => ['master'], 'command' => '#e']);
 $default_bot->LoadModule('UtilCommands', ['whitelist' => ['master']]);

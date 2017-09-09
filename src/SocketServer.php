@@ -59,32 +59,20 @@ class SocketConnection {
             return null;
         }
 
-        $len = socket_write($this->fh, $this->wbuf, strlen($this->wbuf));
+        $len = @socket_write($this->fh, $this->wbuf, strlen($this->wbuf));
 
-        if ($len === false && socket_last_error() === MSG_EAGAIN) {
-            return 0;
+        if ($len) {
+            $this->wbuf = substr($this->wbuf, $len);
         }
-
-        if ($len === false) {
-            throw new Exception('Socket error: '.socket_strerror(socket_last_error()));
-        }
-
-        $this->wbuf = substr($this->wbuf, $len);
         return $len;
     }
 
     function DoRecv() {
-        $len = socket_recv($this->fh, $buf, 2048, MSG_DONTWAIT);
+        $len = @socket_recv($this->fh, $buf, 2048, MSG_DONTWAIT);
 
-        if ($len === 0) {
-            return false;
+        if ($buf) {
+            $this->rbuf .= $buf;
         }
-
-        if ($len === false && socket_last_error() === MSG_EAGAIN) {
-            return 0;
-        }
-
-        $this->rbuf .= $buf;
         return $len;
     }
 
@@ -182,8 +170,23 @@ class SocketServer {
             foreach ($this->clients as $cc) {
                 if ($cc->GetResource() === $c) {
                     $recv = $cc->DoRecv();
+                    if ($recv === 0) {
+                        $this->Close($cc);
+                        continue;
+                    }
+
                     if ($recv === false) {
-                        $this->close($cc);
+                        $err = socket_last_error();
+                        switch ($err) {
+                            case SOCKET_ECONNRESET:
+                                $this->RemoveClient($cc);
+                                break;
+                            case SOCKET_EAGAIN:
+                                break;
+                            default:
+                                throw new Exception('Socket error: '.socket_strerror($err));
+                                break;
+                        }
                         continue;
                     }
 
@@ -195,7 +198,21 @@ class SocketServer {
         foreach ($w as $c) {
             foreach ($this->clients as $cc) {
                 if ($cc->GetResource() === $c) {
-                    $cc->DoSend();
+                    $sent = $cc->DoSend();
+
+                    if ($sent === false) {
+                        $err = socket_last_error();
+                        switch ($err) {
+                            case SOCKET_EPIPE:
+                                $this->RemoveClient($cc);
+                                break;
+                            case SOCKET_EAGAIN:
+                                break;
+                            default:
+                                throw new Exception('Socket error: '.socket_strerror($err));
+                                break;
+                        }
+                    }
                 }
             }
         }
@@ -203,19 +220,27 @@ class SocketServer {
         return $r;
     }
 
-    function close($c) {
-        $this->on_close_func->__invoke($c);
-        /* last chance to read/write remaining data */
-        $this->event_dispatch();
+    function RemoveClient($client, $close = false) {
+        if ($close) {
+            $this->on_close_func->__invoke($client);
+            /* last chance to write remaining data */
+            $client->DoSend();
+        }
 
-        foreach ($this->clients as $k => $client) {
-            if ($c === $client) {
-                $client->close();
+        foreach ($this->clients as $k => $c) {
+            if ($client === $c) {
+                if ($close) {
+                    $c->close();
+                }
                 unset($this->clients[$k]);
                 return true;
             }
         }
 
         return false;
+    }
+
+    function Close($client) {
+        return $this->RemoveClient($client, true);
     }
 }

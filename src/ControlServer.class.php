@@ -41,14 +41,20 @@ class ControlServer {
         });
 
         $this->server->on_read(function($client) {
-            $command = trim($client->GetLine());
-            $tok = explode(' ', $command);
+            $commands = [];
+            while (!empty($line = $client->GetLine())) {
+                $commands[] = trim($line);
+            }
 
-            $callback = array($this, 'command_'.strtolower($tok[0]));
-            if (is_callable($callback)) {
-                $callback($client, $command);
-            } else {
-                $this->Respond($client, 300);
+            foreach ($commands as $command) {
+                $tok = explode(' ', $command);
+
+                $callback = array($this, 'command_' . strtolower($tok[0]));
+                if (is_callable($callback)) {
+                    $callback($client, $command);
+                } else {
+                    $this->Respond($client, 300);
+                }
             }
         });
 

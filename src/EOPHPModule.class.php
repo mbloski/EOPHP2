@@ -104,6 +104,44 @@ class EOPHPModule {
         ]);
     }
 
+    public function TradeRequest($id) {
+        $this->bot->send_packet(Protocol::F['Trade'], Protocol::A['Request'], [
+            Protocol::EncodeInteger(138, 1),
+            Protocol::EncodeInteger($id, 2)
+        ]);
+    }
+
+    public function TradeAccept($id) {
+        $this->bot->send_packet(Protocol::F['Trade'], Protocol::A['Accept'], [
+            chr(1),
+            Protocol::EncodeInteger($id, 2)
+        ]);
+    }
+
+    public function Trade($action, $item = 0, $amount = 1) {
+        $action = strtolower($action);
+        switch($action) {
+            case 'add':
+            case 'remove':
+                $this->bot->send_packet(Protocol::F['Trade'], Protocol::A[ucfirst($action)], [
+                    Protocol::EncodeInteger($item, 2),
+                    Protocol::EncodeInteger($amount, 4)
+                ]);
+                break;
+            case 'cancel':
+                $this->bot->send_packet(Protocol::F['Trade'], Protocol::A['Close'], [
+                    chr(1)
+                ]);
+                break;
+            case 'agree':
+                $this->bot->send_packet(Protocol::F['Trade'], Protocol::A['Agree'], [
+                    chr(2)
+                ]);
+                break;
+        }
+        return false;
+    }
+
     final public function RequestOnlineNicknames() {
         $this->bot->send_packet(Protocol::F['Players'], Protocol::A['List'], [
             Protocol::COMMA

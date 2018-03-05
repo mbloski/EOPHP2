@@ -92,6 +92,10 @@ class EOPHPModule {
             $message]);
     }
 
+    public function GlobalMessage($message) {
+        $this->bot->send_packet(Protocol::F['Talk'], Protocol::A['Message'], [$message]);
+    }
+
     public function Latency() {
         $this->bot->send_packet(Protocol::F['Message'], Protocol::A['Ping'], [
             Protocol::EncodeInteger(2, 2)
@@ -145,6 +149,12 @@ class EOPHPModule {
     final public function RequestOnlineNicknames() {
         $this->bot->send_packet(Protocol::F['Players'], Protocol::A['List'], [
             Protocol::COMMA
+        ]);
+    }
+
+    final public function UseItem($id) {
+        $this->bot->send_packet(Protocol::F['Item'], Protocol::A['Use'], [
+            Protocol::EncodeInteger($id, 2)
         ]);
     }
 

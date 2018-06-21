@@ -2,7 +2,7 @@
 class EightBall extends EOPHPModule {
     private $answers;
 
-    public function Initialize() {
+    public function Initialize($args) {
         $this->answers = [
             'It is certain.',
             'It is decidedly so.',

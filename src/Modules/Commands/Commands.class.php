@@ -40,7 +40,7 @@ class Commands extends EOPHPModule
     }
 
     private function commandExists($command) {
-        $query = 'SELECT COUNT(*) FROM commands WHERE command = :command';
+        $query = 'SELECT COUNT(*) FROM commands WHERE command = :command AND deleted = 0';
         $s = $this->database->prepare($query);
         $s->execute([':command' => $command]);
         $ret = $s->fetch();

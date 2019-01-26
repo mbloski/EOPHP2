@@ -64,7 +64,7 @@ class Commands extends EOPHPModule
     }
 
     private function deleteAll($registrar) {
-        $query = 'UPDATE commands SET deleted = 1 WHERE registrar = :registrar';
+        $query = 'UPDATE commands SET deleted = 1 WHERE registrar = :registrar AND deleted = 0';
         $s = $this->database->prepare($query);
         $s->execute([':registrar' => $registrar]);
         return $s->rowCount();

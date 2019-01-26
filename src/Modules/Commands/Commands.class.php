@@ -126,8 +126,8 @@ class Commands extends EOPHPModule
                 return;
             }
 
-            array_shift($oexl);
-            array_shift($oexl);
+            array_shift($oex);
+            array_shift($oex);
             $valcmd = implode(' ', $oex);
 
             if (strlen($valcmd) < 6) {

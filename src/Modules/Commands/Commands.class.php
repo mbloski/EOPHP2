@@ -100,8 +100,9 @@ class Commands extends EOPHPModule
 
     public function Player_Talk($packet) {
         $id = $packet->get_int(2);
-        $message = strtolower($packet->get_string());
-        $ex = explode(' ', $message);
+        $message = $packet->get_string();
+        $oex = explode(' ', $message);
+        $ex = explode(' ', strtolower($message));
         $name = strtolower($this->bot->characters[$id]->name);
 
         if ($ex[0][0] === '#') {
@@ -125,10 +126,9 @@ class Commands extends EOPHPModule
                 return;
             }
 
-            $tokval = $ex;
-            array_shift($tokval);
-            array_shift($tokval);
-            $valcmd = implode(' ', $tokval);
+            array_shift($oexl);
+            array_shift($oexl);
+            $valcmd = implode(' ', $oex);
 
             if (strlen($valcmd) < 6) {
                 $this->Emote(9);

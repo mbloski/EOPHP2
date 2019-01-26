@@ -113,7 +113,7 @@ class Commands extends EOPHPModule
         }
 
         if ($ex[0] === '#register') {
-            if (!isset($ex[1]) || strlen($ex[1]) < 4) {
+            if (!isset($ex[1]) || strlen($ex[1]) < 3) {
                 $this->Emote(9);
                 return;
             }
@@ -160,7 +160,7 @@ class Commands extends EOPHPModule
         }
 
         if ($ex[0] === '#bancmd') {
-            if (!isset($ex[1]) || strlen($ex[1]) < 4) {
+            if (!isset($ex[1]) || strlen($ex[1]) < 3) {
                 $this->Emote(9);
                 return;
             }

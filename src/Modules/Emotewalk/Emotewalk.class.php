@@ -58,6 +58,12 @@ class Emotewalk extends EOPHPModule {
                 case Protocol::EMOTE_EMBARASSED:
                     /* TODO attack */
                 break;
+                case Protocol::EMOTE_SURPRISED:
+                    $this->Sit();
+                break;
+                case Protocol::EMOTE_SUICIDAL:
+                    $this->Sit(false);
+                break;
             }
         }
     }

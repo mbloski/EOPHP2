@@ -180,6 +180,12 @@ class EOPHPModule {
         ]);
     }
 
+    final public function Sit($sit = true) {
+        $this->bot->send_packet(Protocol::F['Sit'], Protocol::A['Request'], [
+             Protocol::EncodeInteger(boolval($sit), 1),
+        ]);
+    }
+
     final public function get_name() {
         return $this->module_name;
     }

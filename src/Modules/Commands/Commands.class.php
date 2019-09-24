@@ -159,7 +159,7 @@ class Commands extends EOPHPModule
             }
         }
 
-        if ($ex[0] === '#bancmd') {
+        if ($ex[0] === '#bancmd' && in_array($name, $this->operators)) {
             if (!isset($ex[1]) || strlen($ex[1]) < 3) {
                 $this->Emote(9);
                 return;

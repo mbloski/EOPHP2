@@ -173,6 +173,13 @@ class EOPHPModule {
         ]);
     }
 
+    final public function Attack($direction) {
+        $this->bot->send_packet(Protocol::F['Attack'], Protocol::A['Use'], [
+            Protocol::EncodeInteger($direction, 1),
+            Protocol::EncodeInteger(Protocol::timestamp(), 3),
+        ]);
+    }
+
     final public function get_name() {
         return $this->module_name;
     }

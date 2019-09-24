@@ -98,7 +98,8 @@ class EvalCommand extends EOPHPModule {
                 if (empty($this->buffer)) {
                     $this->Say($this->command.': buffer is empty');
                 } else {
-                    $this->DoEval(implode('', $this->buffer));
+                    $arg = implode(' ', array_slice($ex, 2));
+                    $this->DoEval('$arg='.json_encode($arg).';'.implode('', $this->buffer));
                 }
                 break;
             case 'show':

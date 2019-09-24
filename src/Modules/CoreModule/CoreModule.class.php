@@ -80,6 +80,10 @@ class CoreModule extends EOPHPModule {
         return $this->character;
     }
 
+    public function GetPid() {
+        return $this->player_id;
+    }
+
     function Init_Init($packet) {
         $sub_id = $packet->get_int(1);
         switch ($sub_id) {

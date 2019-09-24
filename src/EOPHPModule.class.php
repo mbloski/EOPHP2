@@ -158,6 +158,21 @@ class EOPHPModule {
         ]);
     }
 
+    final public function Walk($direction) {
+        $pid = $this->bot->GetModule('CoreModule')->GetPid();
+        $myself = $this->bot->characters[$pid] ?? null;
+        if (!$myself) {
+            throw new \Exception('cannot walk uninitialized');
+        }
+
+        $this->bot->send_packet(Protocol::F['Walk'], Protocol::A['Player'], [
+            Protocol::EncodeInteger($direction, 1),
+            Protocol::EncodeInteger(Protocol::timestamp(), 3),
+            Protocol::EncodeInteger($myself->map_x, 1),
+            Protocol::EncodeInteger($myself->map_y, 1),
+        ]);
+    }
+
     final public function get_name() {
         return $this->module_name;
     }

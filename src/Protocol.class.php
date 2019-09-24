@@ -302,4 +302,8 @@ class Protocol {
 
         return $finalpacket;
     }
+
+    public static function timestamp() {
+        return (date('H') * 3600) + (date('i') * 60) + (date('s') * 100) + (intval(explode(' ', microtime())[0] * 100));
+    }
 }
